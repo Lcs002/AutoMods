@@ -9,23 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/AutoMods_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/AutoMods.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLDependencyDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLModDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLModsDefinitions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLVersionDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/reference/YMLModReference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/reference/YMLModsReferences.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/App.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/lvum/com/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lvum/com/AutoModsTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="v1.0" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,6 +27,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="b2f93cb0-9499-428d-82e7-8f195612bdaa" />
+        <option name="url" value="https://github.com/Lcs002/AutoMods.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="tbap7rq7" />
@@ -70,6 +62,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
@@ -90,6 +83,26 @@
       <option name="presentableId" value="Default" />
       <updated>1698845351360</updated>
     </task>
+    <task id="LOCAL-00001" summary="First Release">
+      <created>1698908516818</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1698908516818</updated>
+    </task>
+    <task id="LOCAL-00002" summary="v1.0">
+      <created>1698908808722</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1698908808722</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="First Release" />
+    <MESSAGE value="v1.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="v1.0" />
   </component>
 </project>

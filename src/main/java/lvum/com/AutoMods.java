@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class AutoMods
 {
     private static final Logger LOGGER = Logger.getLogger(AutoMods.class.getName());
-    private static final String DB_JAR = "https://github.com/Lcs002/AutoModsDB/tree/main/database";
+    private static final String DB_JAR = "https://github.com/Lcs002/AutoModsDB/raw/main/database";
     private static final String YML_DEFINITIONS = "https://raw.githubusercontent.com/Lcs002/AutoModsDB/main/definitions.yml";
     private static final String YML_REFERENCES = "https://raw.githubusercontent.com/Lcs002/AutoModsDB/main/references.yml";
     private static final String MESSAGE_TITLE = "AutoMods - CaposMods";
