@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AutoMods:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AutoMods_jar</output-path>
+    <root id="archive" name="AutoMods.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="AutoMods" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.13.0/jackson-dataformat-yaml-2.13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/yaml/snakeyaml/1.28/snakeyaml-1.28.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.13.0/jackson-databind-2.13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.13.0/jackson-annotations-2.13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/rockswang/java-curl/1.2.2.2/java-curl-1.2.2.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.13.0/jackson-core-2.13.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
