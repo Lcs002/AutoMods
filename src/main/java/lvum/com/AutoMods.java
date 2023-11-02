@@ -1,24 +1,17 @@
 package lvum.com;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import lvum.com.definition.YMLDependencyDefinition;
-import lvum.com.definition.YMLModDefinition;
-import lvum.com.definition.YMLModsDefinitions;
-import lvum.com.definition.YMLVersionDefinition;
-import lvum.com.reference.YMLModReference;
+import lvum.com.definition.*;
+import lvum.com.reference.ModReference;
 import lvum.com.reference.YMLModsReferences;
+import lvum.com.ui.AutoModsUI;
 
 import javax.swing.*;
 import java.io.*;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,32 +43,24 @@ public class AutoMods
             The following Mods couldn't be downloaded:%s
             Make sure they are not already on 'mods' folder.
             """;
+    private final AutoModsUI autoModsUI;
+
+    private ModDefinition[] modsDefinitions;
+    private ModReference[] modsReferences;
+
 
     public static void main( String[] args ) {
-        int resp = JOptionPane.showConfirmDialog(null, INITIAL_MESSAGE,
-                MESSAGE_TITLE, JOptionPane.OK_CANCEL_OPTION);
-        if (resp == 0) {
-            AutoMods app = new AutoMods();
-            app.start();
-        }
+        AutoMods autoMods = new AutoMods();
+        autoMods.start();
     }
 
 
     public AutoMods() {
-        LOGGER.addHandler(new ConsoleHandler());
+        autoModsUI = new AutoModsUI(this);
     }
 
-
-    private void start() {
-        LOGGER.log(Level.INFO, "[STARTED] AutoMods");
-        Path path = getAppdataPath();
-        if (path == null) return;
-        YMLModsReferences modsReferences = getModsReferences();
-        if (modsReferences == null) return;
-        YMLModsDefinitions modsDefinitions = getModsDefinitions();
-        if (modsDefinitions == null) return;
-        downloadMods(path, modsReferences, modsDefinitions);
-        LOGGER.log(Level.INFO, "[ENDED] AutoMods");
+    public void start() {
+        autoModsUI.setVisible(true);
     }
 
     private Path getAppdataPath() {
@@ -92,146 +77,130 @@ public class AutoMods
         return path;
     }
 
-    private YMLModsReferences getModsReferences() {
+    private void updateModsReferences() {
         LOGGER.log(Level.INFO, "[STARTED] Load Mods References");
-        YMLModsReferences modsReferences = null;
+        YMLModsReferences ymlModsReferences = null;
 
         try {
-            // Create a URL object.
-            URL url = new URL(YML_REFERENCES);
-
-            // Open a connection to the URL.
-            URLConnection connection = url.openConnection();
-
-            // Get the input stream for the file.
-            InputStream inputStream = connection.getInputStream();
-
-            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-            mapper.findAndRegisterModules();
-            modsReferences = mapper.readValue(inputStream, YMLModsReferences.class);
-
-            // Close the input stream.
-            inputStream.close();
+            // Try to parse the YML and save it to a class
+            YAMLParser parser = new YAMLParser();
+            ymlModsReferences = parser.parse(YML_REFERENCES, YMLModsReferences.class);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        // Save the parsed YML to a List of Defined Mods
         LOGGER.log(Level.INFO, "[ENDED] Load Mods References");
-        return modsReferences;
+        modsReferences = ymlModsReferences.getMods();
     }
 
-    private YMLModsDefinitions getModsDefinitions() {
+    private void updateModsDefinitions() {
         LOGGER.log(Level.INFO, "[STARTED] Load Mods Definitions");
 
-        YMLModsDefinitions modsDefinitions;
+        YMLModsDefinitions ymlModsDefinitions;
 
         try {
-            // Create a URL object.
-            URL url = new URL(YML_DEFINITIONS);
-
-            // Open a connection to the URL.
-            URLConnection connection = url.openConnection();
-
-            // Get the input stream for the file.
-            InputStream inputStream = connection.getInputStream();
-
-            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-            mapper.findAndRegisterModules();
-            modsDefinitions = mapper.readValue(inputStream, YMLModsDefinitions.class);
-
-            // Close the input stream.
-            inputStream.close();
+            // Try to parse the YML and save it to a class
+            YAMLParser parser = new YAMLParser();
+            ymlModsDefinitions = parser.parse(YML_DEFINITIONS, YMLModsDefinitions.class);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         LOGGER.log(Level.INFO, "[ENDED] Load Mods Definitions");
-        return modsDefinitions;
+        // Save the parsed YML to a List of Defined Mods
+        modsDefinitions = ymlModsDefinitions.getMods();
     }
 
-    private boolean downloadMods(Path path, YMLModsReferences modsReferences,
-                                 YMLModsDefinitions modsDefinitions) {
+    private List<Mod> getMods(ModDefinition[] modsDefinitions,
+                          ModReference[] modsReferences) {
+        List<Mod> mods = new ArrayList<>();
+        List<String> included = new ArrayList<>();
+
+        // For each Mod referenced...
+        for (ModReference modReference : modsReferences) {
+            // If the mod is not already included...
+            if (!included.contains(modReference.getModid())) {
+                // Include the mod
+                included.add(modReference.getModid());
+                // Find the Mod Definition
+                ModDefinition modDefinition = getModDefinition(modReference.getModid(), modsDefinitions);
+                // TODO Handle null modDefinition
+                // Get its target version from the Reference
+                String targetVersion;
+                if (modReference.getVersion() != null) targetVersion = modReference.getVersion();
+                // TODO Handle null versions
+                // Or get the latest version
+                else targetVersion = Arrays.stream(modDefinition.getVersions()).findFirst().get().getVersion();
+                // Add the definition and target version of the mod
+                mods.add(new Mod(modDefinition, targetVersion));
+            }
+        }
+        return mods;
+    }
+
+    private List<Mod> getModsDependencies(List<Mod> mods) {
+        List<Mod> dependencyMods = new ArrayList<>();
+        List<String> included = new ArrayList<>();
+
+        // For each mod
+        for (Mod mod : mods) {
+            // Get the target version definition of the mod (the version that will be downloaded)
+            VersionDefinition versionDefinition = getVersionDefinition(mod.getVersion(), mod);
+            // If the version does not have any dependencies, go to next mod
+            if (versionDefinition.getDependencies() != null)
+                // For each Mod Dependency...
+                for (DependencyDefinition modDependency : versionDefinition.getDependencies())
+                    // If the dependency is not already included for download...
+                    if (!included.contains(modDependency.getModID())) {
+                        // Add the dependency in the included list
+                        included.add(modDependency.getModID());
+                        // Find the Dependency Definition
+                        ModDefinition dependencyDefinition =
+                                getModDefinition(modDependency.getModID(), modsDefinitions);
+                        // TODO Handle null modDefinition
+                        // Get the Dependency Version from the Mod
+                        String targetVersion = modDependency.getVersion();
+                        // Add the Dependency Definition and its target version
+                        // TODO Hanle null versions
+                        dependencyMods.add(new Mod(dependencyDefinition, targetVersion));
+                    }
+        }
+        return dependencyMods;
+    }
+
+    private DownloadResult downloadMods(Path path, List<Mod> mods) {
         LOGGER.log(Level.INFO, "[STARTED] Mods Download");
 
-        List<String> errorMods = new ArrayList<>();
-        List<String> downloadedMods = new ArrayList<>();
+        DownloadResult result = new DownloadResult();
 
-        for (YMLModReference modReference : modsReferences.getMods()) {
-            LOGGER.log(Level.INFO, "    Found Mod Reference: " + modReference.getModid());
-
-            if (!downloadedMods.contains(modReference.getModid())) {
-                YMLModDefinition modDefinition = getModDefinition(modReference.getModid(), modsDefinitions);
-                YMLVersionDefinition versionDefinition = getVersionDefinition(modReference.getVersion(), modDefinition);
+        for (Mod mod : mods) {
+            LOGGER.log(Level.INFO, "    [1/3] Found Mod: " + mod.getModID());
+            if (!result.getModsDownloaded().contains(mod.getModID())) {
+                VersionDefinition versionDefinition = getVersionDefinition(mod.getVersion(), mod);
 
                 if (versionDefinition != null) {
-                    if (download(path, versionDefinition.getFile(), errorMods))
-                        downloadedMods.add(modReference.getModid());
-                    else errorMods.add(versionDefinition.getFile());
-
-                    if (versionDefinition.getDependencies() != null)
-                        for (YMLDependencyDefinition dependencyDefinition : versionDefinition.getDependencies()) {
-                            if (!downloadedMods.contains(dependencyDefinition.getModID())) {
-                                YMLModDefinition dependencyModDefinition =
-                                        getModDefinition(dependencyDefinition.getModID(), modsDefinitions);
-                                YMLVersionDefinition dependencyVersionDefinition =
-                                        getVersionDefinition(dependencyDefinition.getVersion(), dependencyModDefinition);
-
-                                if (dependencyVersionDefinition != null) {
-                                    if(download(path, dependencyVersionDefinition.getFile(), errorMods))
-                                        downloadedMods.add(dependencyDefinition.getModID());
-                                    else errorMods.add(dependencyDefinition.getModID());
-                                }
-                            }
-                        }
+                    LOGGER.log(Level.INFO, "    [2/3] Downloading Mod: " + mod.getModID());
+                    if (download(path, versionDefinition.getFile())) {
+                        result.addDownload(mod.getModID());
+                        LOGGER.log(Level.INFO, "    [3/3] Downloaded Mod: " + mod.getModID());
+                    }
+                    else result.addError(versionDefinition.getFile());
                 }
             }
         }
-
-        if (!errorMods.isEmpty()) {
-            String s = "";
-            for (String errorFile : errorMods) s += "\n    " + errorFile;
-            JOptionPane.showConfirmDialog(null, String.format(ERROR_MESSAGE, s,
-                    MESSAGE_TITLE, JOptionPane.OK_OPTION));
-        }
-
-        String s = "";
-        for (String downloadedMod : downloadedMods) s += "\n    " + downloadedMod;
-        JOptionPane.showConfirmDialog(null, String.format(SUCCESS_MESSAGE, s,
-                MESSAGE_TITLE, JOptionPane.OK_OPTION));
-
         LOGGER.log(Level.INFO, "[ENDED] Mods Download");
-        return true;
+        return result;
     }
 
-    private boolean download(Path path, String file, List<String> errorFiles) {
-        LOGGER.log(Level.INFO, "    [STARTED] Downloading File: " + file);
-        try {
-            // Create a URL object.
-            URL url = new URL(DB_JAR + "/" + file);
-
-            // Open a connection to the URL.
-            URLConnection connection = url.openConnection();
-
-            // Get the input stream for the JAR file.
-            InputStream inputStream = connection.getInputStream();
-
-            // Save the JAR file to disk.
-            Files.copy(inputStream, Paths.get(path.toString(), file));
-
-            // Close the input stream.
-            inputStream.close();
-        } catch (Exception e) {
-            LOGGER.log(Level.INFO, "    [ERROR] Downloading File: " + file);
-            return false;
-        }
-        LOGGER.log(Level.INFO, "    [ENDED] Downloading File: " + file);
-        return true;
+    private boolean download(Path path, String file) {
+        Downloader downloader = new Downloader();
+        return downloader.download(DB_JAR, path, file);
     }
 
-    private YMLVersionDefinition getVersionDefinition(String version, YMLModDefinition modDefinition) {
+    private VersionDefinition getVersionDefinition(String version, ModDefinition modDefinition) {
         Optional<YMLVersionDefinition> versionDefinition;
         if (modDefinition == null) return null;
         if (version != null) versionDefinition = Arrays.stream(modDefinition.getVersions())
@@ -245,10 +214,25 @@ public class AutoMods
         return versionDefinition.orElse(null);
     }
 
-    private YMLModDefinition getModDefinition(String mod, YMLModsDefinitions modsDefinition) {
-        Optional<YMLModDefinition> modDefinition = Optional.empty();
-        modDefinition = modsDefinition.getMods().stream().filter(x -> Objects.equals(x.getModID(), mod)).findFirst();
+    private ModDefinition getModDefinition(String mod, ModDefinition[] modsDefinition) {
+        Optional<ModDefinition> modDefinition = Optional.empty();
+        modDefinition = Arrays.stream(modsDefinition).filter(x -> Objects.equals(x.getModID(), mod)).findFirst();
         LOGGER.log(Level.INFO, "    Found Definition for modID '" + mod + "'");
         return modDefinition.orElse(null);
+    }
+
+    public void updateMods() {
+        updateModsReferences();
+        updateModsDefinitions();
+        List<Mod> mods = getMods(modsDefinitions, modsReferences);
+        autoModsUI.updateMods(mods);
+    }
+
+    public void downloadMods(List<Mod> mods) {
+        Path path = getAppdataPath();
+        if (path == null) return;
+        List<Mod> dependencies = getModsDependencies(mods);
+        mods.addAll(dependencies);
+        downloadMods(path, mods);
     }
 }
