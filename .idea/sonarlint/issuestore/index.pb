@@ -1,0 +1,5 @@
+
+P
+ .idea/artifacts/AutoMods_jar.xml,8\d\8d691016128dd905b7256d2d0ed4a1604d3166b6
+D
+META-INF/MANIFEST.MF,2\e\2e8cf92205ec303e7304888d382cb6a8cf5f56ba

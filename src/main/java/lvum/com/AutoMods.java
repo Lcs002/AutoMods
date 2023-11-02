@@ -234,8 +234,9 @@ public class AutoMods
     private YMLVersionDefinition getVersionDefinition(String version, YMLModDefinition modDefinition) {
         Optional<YMLVersionDefinition> versionDefinition;
         if (modDefinition == null) return null;
-        versionDefinition = Arrays.stream(modDefinition.getVersions())
+        if (version != null) versionDefinition = Arrays.stream(modDefinition.getVersions())
                     .filter(x -> Objects.equals(x.getVersion(), version)).findFirst();
+        else versionDefinition = Arrays.stream(modDefinition.getVersions()).findFirst();
 
         if (versionDefinition.isPresent()) LOGGER.log(Level.INFO, "    Version for Definition '"
                 + modDefinition.getModID() + "' is: " + versionDefinition.get());
