@@ -1,7 +1,7 @@
 package lvum.com;
 
-import lvum.com.controller.ModControllerImpl;
-import lvum.com.controller.ModController;
+import lvum.com.controller.mod.ModControllerImpl;
+import lvum.com.controller.mod.ModController;
 import lvum.com.model.mod.github.GithubModRepository;
 import lvum.com.model.mod.github.TargetedMod;
 import lvum.com.model.mod.ModRepository;

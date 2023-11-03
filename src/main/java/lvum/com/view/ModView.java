@@ -11,8 +11,7 @@ public class ModView extends JPanel {
     private TargetedMod targetedMod;
     private JLabel modName = new JLabel();
     private JLabel modIdAndVersion = new JLabel();
-    private JLabel versionsTitle = new JLabel();
-    private JLabel versions = new JLabel();
+    private JLabel description = new JLabel();
     private JLabel dependenciesTitle = new JLabel();
     private JLabel dependencies = new JLabel();
 
@@ -24,11 +23,8 @@ public class ModView extends JPanel {
         modName.setHorizontalAlignment(JLabel.CENTER);
         modIdAndVersion.setFont(new Font("Verdana", Font.ITALIC, 14));
         modIdAndVersion.setHorizontalAlignment(JLabel.CENTER);
-        versionsTitle.setFont(new Font("Verdana", Font.BOLD, 18));
-        versionsTitle.setText("Versions");
-        versionsTitle.setHorizontalAlignment(JLabel.CENTER);
-        versions.setFont(new Font("Verdana", Font.ITALIC, 14));
-        versions.setHorizontalAlignment(JLabel.CENTER);
+        description.setFont(new Font("Verdana", Font.ITALIC, 14));
+        description.setHorizontalAlignment(JLabel.CENTER);
         dependenciesTitle.setFont(new Font("Verdana", Font.BOLD, 18));
         dependenciesTitle.setText("Dependencies");
         dependenciesTitle.setHorizontalAlignment(JLabel.CENTER);
@@ -37,8 +33,7 @@ public class ModView extends JPanel {
         dependencies.setHorizontalAlignment(JLabel.CENTER);
         this.add(modName);
         this.add(modIdAndVersion);
-        this.add(versionsTitle);
-        this.add(versions);
+        this.add(description);
         this.add(dependenciesTitle);
         this.add(dependencies);
     }
@@ -51,5 +46,6 @@ public class ModView extends JPanel {
             sb.append(modDependencyDefinition.getModID()).append(":").append(modDependencyDefinition.getVersion())
                     .append("\n");
         dependencies.setText(sb.toString());
+        description.setText(targetedMod.getDescription());
     }
 }

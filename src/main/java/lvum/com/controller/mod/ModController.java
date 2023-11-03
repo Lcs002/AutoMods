@@ -1,4 +1,4 @@
-package lvum.com.controller;
+package lvum.com.controller.mod;
 
 import lvum.com.model.mod.github.TargetedMod;
 

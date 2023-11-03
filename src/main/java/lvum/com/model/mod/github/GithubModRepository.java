@@ -103,6 +103,8 @@ public class GithubModRepository implements ModRepository {
             // Get path to mods folder
             Path modsFolder = getModsFolder();
 
+            System.out.printf(targetedMod.getTargetVersion().getVersion());
+
             // Save the JAR file to disk.
             Files.copy(inputStream, Paths.get(modsFolder.toString(), targetedMod.getTargetVersion().getFile()));
 
@@ -118,6 +120,7 @@ public class GithubModRepository implements ModRepository {
 
     @Override
     public ModDownloadResult download(List<TargetedMod> targetedMods) {
+        System.out.println(targetedMods);
         ModDownloadResult modDownloadResult = new ModDownloadResult();
         for (TargetedMod targetedMod : targetedMods) {
             ModDownloadResult result = download(targetedMod);

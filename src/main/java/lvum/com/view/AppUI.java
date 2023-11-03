@@ -7,4 +7,5 @@ import java.util.List;
 
 public abstract class AppUI extends JFrame {
     public abstract void updateMods(List<TargetedMod> targetedMods);
+    public abstract void showCompletedDownload();
 }

@@ -1,4 +1,4 @@
-package lvum.com.controller;
+package lvum.com.controller.mod;
 
 import lvum.com.model.mod.github.TargetedMod;
 import lvum.com.model.mod.ModRepository;
@@ -34,7 +34,8 @@ public class ModControllerImpl implements ModController {
     public void downloadMods(List<TargetedMod> targetedMods) {
         List<TargetedMod> dependencies = getModDependencies(targetedMods);
         targetedMods.addAll(dependencies);
-
+        repository.download(targetedMods);
+        view.showCompletedDownload();
     }
 
     private List<TargetedMod> getMods() {
@@ -100,7 +101,10 @@ public class ModControllerImpl implements ModController {
                         // Find the ModDependencyDefinition Definition
                         ModDefinition modDependencyDefinition =
                                 getModDefinition(modDependency.getModID(), definitions);
-                        dependencyTargetedMods.add(new TargetedMod(modDependencyDefinition, targetModVersionDefinitionDefinition));
+                        // Find the version
+                        ModVersionDefinition dependencyTargetVersion = Arrays.stream(modDependencyDefinition.getVersions())
+                                        .filter(x -> x.getVersion() == modDependency.getVersion()).findAny().get();
+                        dependencyTargetedMods.add(new TargetedMod(modDependencyDefinition, dependencyTargetVersion));
                     }
         }
         return dependencyTargetedMods;

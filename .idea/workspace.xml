@@ -9,47 +9,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="Better Client/Server Buttons">
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/controller/ModController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/controller/ModControllerImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/AppRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/github/GithubAppRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/ModRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/GithubModRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/TargetedMod.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/definition/Definitions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/definition/ModDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/definition/ModDependencyDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/definition/ModVersionDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/definition/yml/YMLModDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/definition/yml/YMLModVersionDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/reference/ModReference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/reference/References.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/AppUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="Project Total Overhaul (Proper MVC now)">
+      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/controller/app/AppController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/AppVersions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/github/YMLAppRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/github/YMLAppVersions.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/AutoMods_jar/AutoMods.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/AutoMods_jar/AutoMods.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/AutoMods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/AutoMods.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/DownloadResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/ModDownloadResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/Downloader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/Mod.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/YAMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/utils/YAMLParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/DependencyDefinition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/ModDefinition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/VersionDefinition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLContextDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/definition/ModContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLDependencyDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/definition/yml/YMLModDependencyDefinition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLModDefinition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLModsDefinitions.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLVersionDefinition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/reference/ModReference.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/reference/YMLModReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/reference/yml/YMLModReference.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/reference/YMLModsReferences.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/ui/AutoModsUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/AutoModsUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/ui/ModView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/ModView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/ui/ReadOnlyToggleButtonModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/ReadOnlyToggleButtonModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/lvum/com/AutoModsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lvum/com/AutoDefinitionsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/controller/ModController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/controller/mod/ModController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/controller/ModControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/controller/mod/ModControllerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/AppRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/AppRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/GithubModRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/GithubModRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/view/AppUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/AppUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/view/AutoModsUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/AutoModsUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/view/ModView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/ModView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,8 +38,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -226,7 +201,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698970356686</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Project Total Overhaul (Proper MVC now)">
+      <created>1699039245963</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1699039245964</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -237,6 +219,7 @@
     <MESSAGE value="Project Overhaul, New UI and more refactoring to do" />
     <MESSAGE value="UI inspector implementation (still needs to be completed)" />
     <MESSAGE value="Better Client/Server Buttons" />
-    <option name="LAST_COMMIT_MESSAGE" value="Better Client/Server Buttons" />
+    <MESSAGE value="Project Total Overhaul (Proper MVC now)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Project Total Overhaul (Proper MVC now)" />
   </component>
 </project>

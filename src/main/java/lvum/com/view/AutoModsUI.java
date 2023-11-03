@@ -201,4 +201,8 @@ public class AutoModsUI extends AppUI {
         }
         modsPanel.updateUI();
     }
+
+    public void showCompletedDownload() {
+        JOptionPane.showMessageDialog(this, "Download Complete!");
+    }
 }
