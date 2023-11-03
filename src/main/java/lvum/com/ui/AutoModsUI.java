@@ -25,6 +25,7 @@ public class AutoModsUI extends JFrame {
     private final JButton refreshModsBtn = new JButton("Refresh");
     private final JButton downloadModsBtn = new JButton("Download");
     private final JButton dependencyModsBtn = new JButton("Dependencies");
+    private final ModView modView = new ModView();
     private final AutoMods aplication;
 
     private Map<JCheckBox, Mod> clientMods;
@@ -123,10 +124,17 @@ public class AutoModsUI extends JFrame {
         left.add(leftup);
         left.add(leftdown);
 
-        JPanel right = new JPanel();
-        right.setSize(300, 800);
+        JScrollPane modScroll = new JScrollPane(modView);
+        modScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        modScroll.setPreferredSize(new Dimension(250, 600));
 
-        JPanel up = new JPanel(new GridLayout(1,2));
+        JPanel right = new JPanel();
+        right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
+        right.setSize(300, 800);
+        right.add(modScroll);
+
+        JPanel up = new JPanel();
+        up.setLayout(new GridLayout(1, 2));
         up.add(left);
         up.add(right);
 
@@ -153,6 +161,13 @@ public class AutoModsUI extends JFrame {
         for (Mod mod : mods) {
             if (mod.getContexts() != null) {
                 JCheckBox checkBox = new JCheckBox(mod.getName());
+
+                checkBox.addActionListener(x -> {
+                    if (serverMods.containsKey(checkBox))
+                        modView.setMod(serverMods.get(checkBox));
+                    else if (clientMods.containsKey(checkBox))
+                        modView.setMod(clientMods.get(checkBox));
+                });
 
                 for (YMLContextDefinition contextDefinition : mod.getContexts()) {
                     if (contextDefinition.equals(YMLContextDefinition.client)) clientMods.put(checkBox, mod);

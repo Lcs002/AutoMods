@@ -9,27 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="Download first version when version not specified in reference">
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/DownloadResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/Downloader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/Mod.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/YAMLParser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/DependencyDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/ModDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/VersionDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLContextDefinition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/reference/ModReference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/ui/ReadOnlyToggleButtonModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="Project Overhaul, New UI and more refactoring to do">
+      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/ui/ModView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/AutoMods_jar/AutoMods.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/AutoMods_jar/AutoMods.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/AutoMods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/AutoMods.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLDependencyDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLDependencyDefinition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLModDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLModDefinition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLModsDefinitions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLModsDefinitions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLVersionDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/definition/YMLVersionDefinition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/reference/YMLModReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/reference/YMLModReference.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/ui/AutoModsUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/ui/AutoModsUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -128,8 +110,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ModView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="lvum.com.ui.ModView" />
+      <module name="AutoMods" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lvum.com.ui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ModView" />
         <item itemvalue="Application.AutoModsUI" />
         <item itemvalue="Application.AutoMods" />
       </list>
@@ -172,7 +168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698939138012</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Project Overhaul, New UI and more refactoring to do">
+      <created>1698965079271</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1698965079271</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -180,6 +183,7 @@
     <MESSAGE value="v1.0" />
     <MESSAGE value="Solved: Download only downloading response but not file" />
     <MESSAGE value="Download first version when version not specified in reference" />
-    <option name="LAST_COMMIT_MESSAGE" value="Download first version when version not specified in reference" />
+    <MESSAGE value="Project Overhaul, New UI and more refactoring to do" />
+    <option name="LAST_COMMIT_MESSAGE" value="Project Overhaul, New UI and more refactoring to do" />
   </component>
 </project>
