@@ -9,10 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="Project Overhaul, New UI and more refactoring to do">
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/ui/ModView.java" afterDir="false" />
+    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="Better Client/Server Buttons">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/AutoMods_jar/AutoMods.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/AutoMods_jar/AutoMods.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/ui/AutoModsUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/ui/AutoModsUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/ui/ModView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/ui/ModView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +176,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698965079271</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="UI inspector implementation (still needs to be completed)">
+      <created>1698969773688</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1698969773688</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -184,6 +192,8 @@
     <MESSAGE value="Solved: Download only downloading response but not file" />
     <MESSAGE value="Download first version when version not specified in reference" />
     <MESSAGE value="Project Overhaul, New UI and more refactoring to do" />
-    <option name="LAST_COMMIT_MESSAGE" value="Project Overhaul, New UI and more refactoring to do" />
+    <MESSAGE value="UI inspector implementation (still needs to be completed)" />
+    <MESSAGE value="Better Client/Server Buttons" />
+    <option name="LAST_COMMIT_MESSAGE" value="Better Client/Server Buttons" />
   </component>
 </project>

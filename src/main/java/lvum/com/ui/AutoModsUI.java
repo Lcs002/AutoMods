@@ -20,8 +20,8 @@ public class AutoModsUI extends JFrame {
     private final JScrollPane modsScrollPane = new JScrollPane(modsPanel);
     private final JCheckBox downloadClient = new JCheckBox("Download Client Mods");
     private final JCheckBox downloadServer = new JCheckBox("Download Server Mods");
-    private final JButton clientModsBtn = new JButton("Client");
-    private final JButton serverModsBtn = new JButton("Server");
+    private final JToggleButton clientModsBtn = new JToggleButton("Client");
+    private final JToggleButton serverModsBtn = new JToggleButton("Server");
     private final JButton refreshModsBtn = new JButton("Refresh");
     private final JButton downloadModsBtn = new JButton("Download");
     private final JButton dependencyModsBtn = new JButton("Dependencies");
@@ -78,11 +78,13 @@ public class AutoModsUI extends JFrame {
 
         clientModsBtn.addActionListener(x -> {
             context = "client";
+            serverModsBtn.setSelected(false);
             showContextMods();
         });
 
         serverModsBtn.addActionListener(x -> {
             context = "server";
+            clientModsBtn.setSelected(false);
             showContextMods();
         });
 
@@ -119,7 +121,7 @@ public class AutoModsUI extends JFrame {
 
         JPanel left = new JPanel();
         left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
-        left.setSize(300, 800);
+        left.setSize(250, 800);
         left.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         left.add(leftup);
         left.add(leftdown);
@@ -130,7 +132,7 @@ public class AutoModsUI extends JFrame {
 
         JPanel right = new JPanel();
         right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
-        right.setSize(300, 800);
+        right.setSize(250, 800);
         right.add(modScroll);
 
         JPanel up = new JPanel();

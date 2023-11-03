@@ -32,9 +32,9 @@ public class ModView extends JPanel {
     }
 
     public ModView(){
-        this.setSize(350, 600);
+        this.setSize(250, 600);
         this.setLayout(new GridLayout(0,1));
-        modName.setFont(new Font("Verdana", Font.BOLD, 24));
+        modName.setFont(new Font("Verdana", Font.BOLD, 22));
         modName.setHorizontalAlignment(JLabel.CENTER);
         modIdAndVersion.setFont(new Font("Verdana", Font.ITALIC, 14));
         modIdAndVersion.setHorizontalAlignment(JLabel.CENTER);
