@@ -9,21 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="Project Total Overhaul (Proper MVC now)">
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/controller/app/AppController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/AppVersions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/github/YMLAppRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/github/YMLAppVersions.java" afterDir="false" />
+    <list default="true" id="303713e3-76b8-4a3c-a8ec-650831e23fbf" name="Changes" comment="Dependency Solved">
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/AutoMods_jar/AutoMods.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/AutoMods_jar/AutoMods.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/AutoMods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/AutoMods.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/controller/ModController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/controller/mod/ModController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/controller/ModControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/controller/mod/ModControllerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/AppRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/app/AppRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/GithubModRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/model/mod/github/GithubModRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/view/AppUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/AppUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/view/AutoModsUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/AutoModsUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/controller/mod/ModControllerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/controller/mod/ModControllerImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lvum/com/view/ModView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lvum/com/view/ModView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -208,7 +199,14 @@
       <option name="project" value="LOCAL" />
       <updated>1699039245964</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Dependency Solved">
+      <created>1699053637604</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1699053637604</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -220,6 +218,7 @@
     <MESSAGE value="UI inspector implementation (still needs to be completed)" />
     <MESSAGE value="Better Client/Server Buttons" />
     <MESSAGE value="Project Total Overhaul (Proper MVC now)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Project Total Overhaul (Proper MVC now)" />
+    <MESSAGE value="Dependency Solved" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dependency Solved" />
   </component>
 </project>

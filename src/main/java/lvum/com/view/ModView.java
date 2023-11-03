@@ -42,9 +42,10 @@ public class ModView extends JPanel {
         modName.setText(targetedMod.getName());
         modIdAndVersion.setText(targetedMod.getModID() + ":" + targetedMod.getTargetVersion().getVersion());
         StringBuilder sb = new StringBuilder();
-        for (ModDependencyDefinition modDependencyDefinition : targetedMod.getTargetVersion().getDependencies())
-            sb.append(modDependencyDefinition.getModID()).append(":").append(modDependencyDefinition.getVersion())
-                    .append("\n");
+        if (targetedMod.getTargetVersion().getDependencies() != null)
+            for (ModDependencyDefinition modDependencyDefinition : targetedMod.getTargetVersion().getDependencies())
+                sb.append(modDependencyDefinition.getModID()).append(":").append(modDependencyDefinition.getVersion())
+                        .append("\n");
         dependencies.setText(sb.toString());
         description.setText(targetedMod.getDescription());
     }

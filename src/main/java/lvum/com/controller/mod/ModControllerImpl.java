@@ -93,20 +93,30 @@ public class ModControllerImpl implements ModController {
             // If the version does not have any dependencies, go to next targetedMod
             if (targetModVersionDefinitionDefinition.getDependencies() != null)
                 // For each TargetedMod ModDependencyDefinition...
-                for (ModDependencyDefinition modDependency : targetModVersionDefinitionDefinition.getDependencies())
+                for (ModDependencyDefinition modDependencyDefinition
+                        : targetModVersionDefinitionDefinition.getDependencies())
                     // If the modDependency is not already included for download...
-                    if (!included.contains(modDependency.getModID())) {
+                    if (!included.contains(modDependencyDefinition.getModID())) {
                         // Add the modDependency in the included list
-                        included.add(modDependency.getModID());
+                        included.add(modDependencyDefinition.getModID());
                         // Find the ModDependencyDefinition Definition
-                        ModDefinition modDependencyDefinition =
-                                getModDefinition(modDependency.getModID(), definitions);
+                        ModDefinition dependencyDefinition =
+                                getModDefinition(modDependencyDefinition.getModID(), definitions);
                         // Find the version
-                        ModVersionDefinition dependencyTargetVersion = Arrays.stream(modDependencyDefinition.getVersions())
-                                        .filter(x -> x.getVersion() == modDependency.getVersion()).findAny().get();
-                        dependencyTargetedMods.add(new TargetedMod(modDependencyDefinition, dependencyTargetVersion));
+                        ModVersionDefinition dependencyTargetVersion =
+                                getVersionDefinition(dependencyDefinition, modDependencyDefinition);
+                        dependencyTargetedMods.add(new TargetedMod(dependencyDefinition, dependencyTargetVersion));
                     }
         }
         return dependencyTargetedMods;
+    }
+
+    private ModVersionDefinition getVersionDefinition(ModDefinition modDefinition,
+                                                      ModDependencyDefinition dependencyDefinition) {
+        ModVersionDefinition res = null;
+        for (ModVersionDefinition modVersionDefinition : modDefinition.getVersions())
+            if (Objects.equals(modVersionDefinition.getVersion(), dependencyDefinition.getVersion()))
+                res = modVersionDefinition;
+        return res;
     }
 }
