@@ -7,7 +7,7 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
-public class AutoModsTest
+public class AutoDefinitionsTest
     extends TestCase
 {
     /**
@@ -15,7 +15,7 @@ public class AutoModsTest
      *
      * @param testName name of the test case
      */
-    public AutoModsTest(String testName )
+    public AutoDefinitionsTest(String testName )
     {
         super( testName );
     }
@@ -25,7 +25,7 @@ public class AutoModsTest
      */
     public static Test suite()
     {
-        return new TestSuite( AutoModsTest.class );
+        return new TestSuite( AutoDefinitionsTest.class );
     }
 
     /**

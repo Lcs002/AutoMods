@@ -1,9 +1,9 @@
-package lvum.com;
+package lvum.com.model.mod;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadResult {
+public class ModDownloadResult {
     private List<String> modsWithErrors = new ArrayList<>();
     private List<String> modsDownloaded = new ArrayList<>();
 

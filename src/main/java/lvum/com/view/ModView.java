@@ -1,15 +1,14 @@
-package lvum.com.ui;
+package lvum.com.view;
 
-import lvum.com.Mod;
-import lvum.com.definition.YMLModDefinition;
-import lvum.com.definition.YMLModsDefinitions;
+import lvum.com.model.mod.github.TargetedMod;
+import lvum.com.model.mod.github.definition.ModDependencyDefinition;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ModView extends JPanel {
 
-    private Mod mod;
+    private TargetedMod targetedMod;
     private JLabel modName = new JLabel();
     private JLabel modIdAndVersion = new JLabel();
     private JLabel versionsTitle = new JLabel();
@@ -17,19 +16,6 @@ public class ModView extends JPanel {
     private JLabel dependenciesTitle = new JLabel();
     private JLabel dependencies = new JLabel();
 
-    public static void main(String[] args) {
-        JFrame p = new JFrame();
-        ModView modView = new ModView();
-        Mod def = new Mod(new YMLModDefinition(), "q");
-        def.setName("Mod Name");
-        def.setModID("mod-id");
-        def.setOptional(false);
-        def.setVersion("1.20.1");
-        modView.setMod(def);
-        p.setSize(800, 900);
-        p.getContentPane().add(modView);
-        p.setVisible(true);
-    }
 
     public ModView(){
         this.setSize(250, 600);
@@ -57,8 +43,13 @@ public class ModView extends JPanel {
         this.add(dependencies);
     }
 
-    public void setMod(Mod mod) {
-        modName.setText(mod.getName());
-        modIdAndVersion.setText(mod.getModID() + ":" + mod.getVersion());
+    public void setMod(TargetedMod targetedMod) {
+        modName.setText(targetedMod.getName());
+        modIdAndVersion.setText(targetedMod.getModID() + ":" + targetedMod.getTargetVersion().getVersion());
+        StringBuilder sb = new StringBuilder();
+        for (ModDependencyDefinition modDependencyDefinition : targetedMod.getTargetVersion().getDependencies())
+            sb.append(modDependencyDefinition.getModID()).append(":").append(modDependencyDefinition.getVersion())
+                    .append("\n");
+        dependencies.setText(sb.toString());
     }
 }

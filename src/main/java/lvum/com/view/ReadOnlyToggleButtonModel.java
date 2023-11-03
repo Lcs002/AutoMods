@@ -1,4 +1,4 @@
-package lvum.com.ui;
+package lvum.com.view;
 
 import javax.swing.*;
 

@@ -16,24 +16,24 @@
 
   <dependencies>
 
-    <dependency>
+    <modDependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
-    </dependency>
+    </modDependency>
 
-    <dependency>
+    <modDependency>
       <groupId>com.github.rockswang</groupId>
       <artifactId>java-curl</artifactId>
       <version>1.2.2.2</version>
-    </dependency>
+    </modDependency>
 
-    <dependency>
+    <modDependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
       <version>2.13.0</version>
-    </dependency>
+    </modDependency>
 
   </dependencies>
   <build>
