@@ -1,122 +1,82 @@
 package lvum.com.controller.mod;
 
-import lvum.com.model.mod.github.TargetedMod;
+import lvum.com.model.mod.ModDownloadTarget;
 import lvum.com.model.mod.ModRepository;
 import lvum.com.model.mod.github.definition.ModDependencyDefinition;
 import lvum.com.model.mod.github.definition.ModDefinition;
 import lvum.com.model.mod.github.definition.ModVersionDefinition;
-import lvum.com.model.mod.github.reference.ModReference;
-import lvum.com.view.AppUI;
+import lvum.com.view.AutoModsView;
 
+import javax.swing.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ModControllerImpl implements ModController {
     private static final Logger LOGGER = Logger.getLogger(ModControllerImpl.class.getName());
-    private final AppUI view;
-    private final ModRepository repository;
+    private AutoModsView view;
+    private ModRepository repository;
+    private Path downloadFolderPath;
+    private boolean deleteIfNotTarget;
 
 
-    public ModControllerImpl(AppUI view, ModRepository repository){
-        this.view = view;
-        this.repository = repository;
+    public ModControllerImpl()
+    {
+        this.downloadFolderPath = getAppDataMincraftModsFolder();
+    }
+
+    private Path getAppDataMincraftModsFolder() {
+        LOGGER.log(Level.INFO, "[STARTED] Find Appdata Folder");
+        String folderPath = System.getenv("APPDATA");
+        Path path = Paths.get(folderPath + "/.minecraft/mods");
+        if (!Files.exists(path)) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "ERROR: Folder '" + path + "' not found",
+                    "Folder not found", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        LOGGER.log(Level.INFO, "[ENDED] Find Appdata Folder");
+        return path;
     }
 
 
     @Override
     public void updateMods() {
         repository.updateRepository();
-        view.updateMods(getMods());
+        view.updateMods(repository.getModsData());
     }
 
     @Override
-    public void downloadMods(List<TargetedMod> targetedMods) {
-        List<TargetedMod> dependencies = getModDependencies(targetedMods);
-        targetedMods.addAll(dependencies);
-        repository.download(targetedMods);
+    public void downloadMods(List<ModDownloadTarget> modDownloadTargets) {
+        repository.download(modDownloadTargets, downloadFolderPath.toString());
         view.showCompletedDownload();
     }
 
-    private List<TargetedMod> getMods() {
-        List<ModDefinition> definitions = repository.getDefinitions();
-        List<ModReference> references = repository.getReferences();
-        List<TargetedMod> targetedMods = new ArrayList<>();
-        List<String> included = new ArrayList<>();
-
-        // For each TargetedMod referenced...
-        for (ModReference modReference : references) {
-            // If the mod is not already included...
-            if (!included.contains(modReference.getModid())) {
-                // Include the mod
-                included.add(modReference.getModid());
-
-                // Find the TargetedMod Definition
-                ModDefinition modDefinition = getModDefinition(modReference.getModid(), definitions);
-
-                // Get its target version from the Reference
-                String targetVersion;
-                if (modReference.getVersion() != null) targetVersion = modReference.getVersion();
-                // Or get the latest version
-                else targetVersion = Arrays.stream(modDefinition.getVersions()).findFirst().get().getVersion();
-
-                // Get Target ModVersionDefinition Definition
-                Optional<ModVersionDefinition> targetVersionDefinition =
-                        Arrays.stream(modDefinition.getVersions())
-                                .filter(x -> x.getVersion().equals(targetVersion)).findFirst();
-
-                // If a version was found
-                if (targetVersionDefinition.isPresent())
-                    targetedMods.add(new TargetedMod(modDefinition, targetVersionDefinition.get()));
-                // TODO Else: tell the user no version of the referenced mod could be found
-            }
-        }
-        return targetedMods;
+    @Override
+    public void setModsFolderPath(Path path) {
+        downloadFolderPath = path;
     }
 
-    private ModDefinition getModDefinition(String mod, List<ModDefinition> definitions) {
-        Optional<ModDefinition> modDefinition;
-        modDefinition = definitions.stream().filter(x -> Objects.equals(x.getModID(), mod)).findFirst();
-        LOGGER.log(Level.INFO, "    Found Definition for modID '" + mod + "'");
-        return modDefinition.orElse(null);
+    @Override
+    public Path getModsFolderPath(){
+        return downloadFolderPath;
     }
 
-    private List<TargetedMod> getModDependencies(List<TargetedMod> targetedMods) {
-        List<ModDefinition> definitions = repository.getDefinitions();
-        List<TargetedMod> dependencyTargetedMods = new ArrayList<>();
-        List<String> included = new ArrayList<>();
-
-        // For each mod
-        for (TargetedMod targetedMod : targetedMods) {
-            // Get the target version definition of the targetedMod (the version that will be downloaded)
-            ModVersionDefinition targetModVersionDefinitionDefinition = targetedMod.getTargetVersion();
-            // If the version does not have any dependencies, go to next targetedMod
-            if (targetModVersionDefinitionDefinition.getDependencies() != null)
-                // For each TargetedMod ModDependencyDefinition...
-                for (ModDependencyDefinition modDependencyDefinition
-                        : targetModVersionDefinitionDefinition.getDependencies())
-                    // If the modDependency is not already included for download...
-                    if (!included.contains(modDependencyDefinition.getModID())) {
-                        // Add the modDependency in the included list
-                        included.add(modDependencyDefinition.getModID());
-                        // Find the ModDependencyDefinition Definition
-                        ModDefinition dependencyDefinition =
-                                getModDefinition(modDependencyDefinition.getModID(), definitions);
-                        // Find the version
-                        ModVersionDefinition dependencyTargetVersion =
-                                getVersionDefinition(dependencyDefinition, modDependencyDefinition);
-                        dependencyTargetedMods.add(new TargetedMod(dependencyDefinition, dependencyTargetVersion));
-                    }
-        }
-        return dependencyTargetedMods;
+    @Override
+    public void setDeleteIfNotTarget(boolean value) {
+        deleteIfNotTarget = value;
     }
 
-    private ModVersionDefinition getVersionDefinition(ModDefinition modDefinition,
-                                                      ModDependencyDefinition dependencyDefinition) {
-        ModVersionDefinition res = null;
-        for (ModVersionDefinition modVersionDefinition : modDefinition.getVersions())
-            if (Objects.equals(modVersionDefinition.getVersion(), dependencyDefinition.getVersion()))
-                res = modVersionDefinition;
-        return res;
+    @Override
+    public void setRepository(ModRepository modRepository) {
+        this.repository = modRepository;
+    }
+
+    @Override
+    public void setView(AutoModsView autoModsView) {
+        this.view = autoModsView;
     }
 }

@@ -2,22 +2,19 @@ package lvum.com.model.mod.github;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import lvum.com.model.mod.ModDownloadResult;
-import lvum.com.model.mod.ModRepository;
-import lvum.com.model.mod.github.definition.ModDefinition;
-import lvum.com.model.mod.github.definition.Definitions;
+import lvum.com.model.mod.*;
+import lvum.com.model.mod.github.definition.*;
+import lvum.com.model.mod.github.reference.GithubModDownloadResult;
 import lvum.com.model.mod.github.reference.ModReference;
 import lvum.com.model.mod.github.reference.References;
-import lvum.com.utils.YAMLParser;
+import lvum.com.model.mod.github.utils.YAMLParser;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
@@ -39,6 +36,29 @@ public class GithubModRepository implements ModRepository {
         updateModsReferences();
     }
 
+    @Override
+    public ModData getModData(String modID) {
+        ModReference modReference = getModReference(modID);
+        return getModData(modReference);
+    }
+
+    @Override
+    public List<ModData> getModsData() {
+        return getMainMods();
+    }
+
+    @Override
+    public ModDownloadResult download(List<ModDownloadTarget> modDownloadTargets, String destFolderPath) {
+        List<String> files = new ArrayList<>();
+        getFiles(modDownloadTargets, files);
+        return downloadAll(files, destFolderPath);
+    }
+
+    @Override
+    public ModDownloadResult download(ModDownloadTarget modDownloadTarget, String destFolderPath) {
+        return download(modDownloadTarget, destFolderPath);
+    }
+
     private void updateModsReferences() {
         LOGGER.log(Level.INFO, "[STARTED] Update Definitions References");
         References references = null;
@@ -54,12 +74,11 @@ public class GithubModRepository implements ModRepository {
         }
         // Save the parsed YML to a List of Defined Definitions
         LOGGER.log(Level.INFO, "[ENDED] Update Definitions References");
-        this.references = new ArrayList<>(List.of((ModReference[]) references.getMods()));
+        this.references = new ArrayList<>(List.of(references.getMods()));
     }
 
     private void updateModsDefinitions() {
         LOGGER.log(Level.INFO, "[STARTED] Update Definitions Definitions");
-
         Definitions definitions;
 
         try {
@@ -73,74 +92,99 @@ public class GithubModRepository implements ModRepository {
         }
         LOGGER.log(Level.INFO, "[ENDED] Update Definitions Definitions");
         // Save the parsed YML to a List of Defined Definitions
-        this.definitions = new ArrayList<>(List.of((ModDefinition[]) definitions.getMods()));
+        this.definitions = new ArrayList<>(List.of(definitions.getMods()));
     }
 
-
-    @Override
-    public List<ModDefinition> getDefinitions() {
-        return (List<ModDefinition>) definitions.clone();
+    private ModDefinition getModDefinition(String modID) {
+        Optional<ModDefinition> modDefinition = definitions.stream().filter(x -> x.getModID().equals(modID)).findFirst();
+        return modDefinition.orElse(null);
     }
 
-    @Override
-    public List<ModReference> getReferences() {
-        return (List<ModReference>) references.clone();
+    private ModReference getModReference(String modID) {
+        Optional<ModReference> modReference = references.stream().filter(x -> x.getModID().equals(modID)).findFirst();
+        return modReference.orElse(null);
     }
 
-    @Override
-    public ModDownloadResult download(TargetedMod targetedMod) {
-        ModDownloadResult modDownloadResult = new ModDownloadResult();
+    private List<ModData> getMainMods() {
+        List<ModData> modsData = new ArrayList<>();
+        List<String> included = new ArrayList<>();
+
+        // For each ModData referenced...
+        for (ModReference modReference : references) {
+            // If the mod is not already included...
+            if (!included.contains(modReference.getModID())) {
+                // Include the mod
+                included.add(modReference.getModID());
+                // Find the ModData Definition
+                ModData modData = getModData(modReference);
+                // Add to the list
+                modsData.add(modData);
+            }
+        }
+        return modsData;
+    }
+
+    private ModData getModData(ModReference modReference) {
+        ModDefinition modDefinition = getModDefinition(modReference.getModID());
+        ModData modData = new GithubModData(modDefinition, modReference.getVersion());
+        String targetVersion;
+        if (modData.getTargetVersionDefinition() != null) targetVersion = modData.getTargetVersionDefinition().getVersion();
+        else targetVersion = modDefinition.getVersions()[0].getVersion();
+        return new GithubModData(modDefinition, targetVersion);
+    }
+
+    private ModVersionDefinition getModVersionDefinition(ModData modData) {
+        Optional<ModVersionDefinition> modVersionDefinition = Arrays.stream(modData.getVersionDefinitions())
+                .filter(x -> x.getVersion().equals(modData.getVersion())).findFirst();
+        return modVersionDefinition.orElse(null);
+    }
+
+    private void getFiles(List<ModDownloadTarget> modDownloadTargets, List<String> files) {
+        for (ModDownloadTarget modDownloadTarget : modDownloadTargets) {
+            ModDefinition modDefinition = getModDefinition(modDownloadTarget.getModID());
+            ModData modData = new GithubModData(modDefinition, modDownloadTarget.getModVersion());
+            ModVersionDefinition modVersionDefinition = getModVersionDefinition(modData);
+            if (!files.contains(modVersionDefinition.getFile())) files.add(modVersionDefinition.getFile());
+            if (modVersionDefinition.getDependencies() != null)
+                getDependencyFiles(modVersionDefinition.getDependencies(), files);
+        }
+    }
+
+    private void getDependencyFiles(ModDependencyDefinition[] dependencyDefinitions, List<String> files) {
+        for (ModDependencyDefinition modDependencyDefinition : dependencyDefinitions) {
+            ModDefinition modDefinition = getModDefinition(modDependencyDefinition.getModID());
+            ModData modData = new GithubModData(modDefinition, modDependencyDefinition.getVersion());
+            ModVersionDefinition modVersionDefinition = getModVersionDefinition(modData);
+            if (!files.contains(modVersionDefinition.getFile())) files.add(modVersionDefinition.getFile());
+        }
+    }
+
+    private ModDownloadResult downloadAll(List<String> files, String path) {
+        ModDownloadResult modDownloadResult = new GithubModDownloadResult();
+        for (String file : files)
+            if (!files.contains(file))  {
+                if (download(file, path)) modDownloadResult.addDownload(file);
+                else modDownloadResult.addError(file);
+            }
+
+        return modDownloadResult;
+    }
+
+    private boolean download(String file, String destFolderPath){
         try {
-            // Create a URL object.
-            URL murl = new URL(DB_JAR + "/" + targetedMod.getTargetVersion().getFile());
-
+            URL murl = new URL(DB_JAR + "/" + file);
             // Open a connection to the URL.
             URLConnection connection = murl.openConnection();
-
             // Get the input stream for the JAR file.
             InputStream inputStream = connection.getInputStream();
-
-            // Get path to mods folder
-            Path modsFolder = getModsFolder();
-
-            System.out.printf(targetedMod.getTargetVersion().getVersion());
-
             // Save the JAR file to disk.
-            Files.copy(inputStream, Paths.get(modsFolder.toString(), targetedMod.getTargetVersion().getFile()));
-
+            Files.copy(inputStream, Paths.get(destFolderPath, file));
             // Close the input stream.
             inputStream.close();
         } catch (Exception e) {
-            modDownloadResult.addError(targetedMod.getModID());
-            return modDownloadResult;
+            LOGGER.log(Level.INFO, e.getMessage());
+            return false;
         }
-        modDownloadResult.addDownload(targetedMod.getModID());
-        return modDownloadResult;
-    }
-
-    @Override
-    public ModDownloadResult download(List<TargetedMod> targetedMods) {
-        System.out.println(targetedMods);
-        ModDownloadResult modDownloadResult = new ModDownloadResult();
-        for (TargetedMod targetedMod : targetedMods) {
-            ModDownloadResult result = download(targetedMod);
-            modDownloadResult.getModsDownloaded().addAll(result.getModsDownloaded());
-            modDownloadResult.getModsWithErrors().addAll(result.getModsWithErrors());
-        }
-        return modDownloadResult;
-    }
-
-    private Path getModsFolder() {
-        LOGGER.log(Level.INFO, "[STARTED] Find Appdata Folder");
-        String folderPath = System.getenv("APPDATA");
-        Path path = Paths.get(folderPath + "/.minecraft/mods");
-        if (!Files.exists(path)) {
-            JOptionPane.showMessageDialog(new JFrame(),
-                    "ERROR: Folder '" + path + "' not found",
-                    "Folder not found", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-        LOGGER.log(Level.INFO, "[ENDED] Find Appdata Folder");
-        return path;
+        return true;
     }
 }

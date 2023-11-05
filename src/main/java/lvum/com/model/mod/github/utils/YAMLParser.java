@@ -1,4 +1,4 @@
-package lvum.com.utils;
+package lvum.com.model.mod.github.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;

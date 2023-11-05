@@ -1,25 +1,30 @@
 package lvum.com.model.mod.github;
 
+import lvum.com.model.mod.ModData;
 import lvum.com.model.mod.github.definition.ModContext;
 import lvum.com.model.mod.github.definition.ModDefinition;
 import lvum.com.model.mod.github.definition.ModVersionDefinition;
 
-public class TargetedMod implements ModDefinition {
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+
+public class GithubModData implements ModData {
     private String modID;
     private String name;
     private String description;
     private Boolean optional;
     private ModContext[] modContexts;
     private ModVersionDefinition[] modVersionDefinitions;
-    private ModVersionDefinition targetModVersionDefinition;
+    private String targetVersion;
 
-    public TargetedMod(ModDefinition modDefinition, ModVersionDefinition targetModVersionDefinition) {
+    public GithubModData(ModDefinition modDefinition, String targetVersion) {
         this.modID = modDefinition.getModID();
         this.name = modDefinition.getName();
         this.optional = modDefinition.getOptional();
         this.modContexts = modDefinition.getContexts();
         this.modVersionDefinitions = modDefinition.getVersions();
-        this.targetModVersionDefinition = targetModVersionDefinition;
+        this.targetVersion = targetVersion;
     }
 
     @Override
@@ -30,6 +35,8 @@ public class TargetedMod implements ModDefinition {
     public void setModID(String value) {
         modID = value;
     }
+
+
 
     @Override
     public String getName() {
@@ -68,7 +75,7 @@ public class TargetedMod implements ModDefinition {
     }
 
     @Override
-    public ModVersionDefinition[] getVersions() {
+    public ModVersionDefinition[] getVersionDefinitions() {
         return modVersionDefinitions;
     }
     @Override
@@ -76,10 +83,21 @@ public class TargetedMod implements ModDefinition {
         modVersionDefinitions = value;
     }
 
-    public ModVersionDefinition getTargetVersion() {
-        return targetModVersionDefinition;
+    @Override
+    public ModVersionDefinition getTargetVersionDefinition() {
+        Optional<ModVersionDefinition> versionDefinition =
+                Arrays.stream(modVersionDefinitions)
+                        .filter(x -> Objects.equals(x.getVersion(), targetVersion)).findFirst();
+        return versionDefinition.orElse(null);
     }
-    public void setTargetVersion(ModVersionDefinition value) {
-        targetModVersionDefinition = value;
+
+    @Override
+    public String getVersion() {
+        return targetVersion;
+    }
+
+    @Override
+    public void setVersion(String value) {
+        targetVersion = value;
     }
 }

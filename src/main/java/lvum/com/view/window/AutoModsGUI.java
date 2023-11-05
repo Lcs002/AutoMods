@@ -1,8 +1,11 @@
-package lvum.com.view;
+package lvum.com.view.window;
 
-import lvum.com.AutoMods;
-import lvum.com.model.mod.github.TargetedMod;
+import lvum.com.app.AutoMods;
+import lvum.com.model.mod.ModData;
+import lvum.com.model.mod.ModDownloadTarget;
+import lvum.com.model.mod.ModDownloadTargetBuilder;
 import lvum.com.model.mod.github.definition.ModContext;
+import lvum.com.view.AutoModsView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,12 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AutoModsUI extends AppUI {
-    private static final String MESSAGE_TITLE = "AutoMods - CaposMods";
+public class AutoModsGUI extends JFrame implements AutoModsView {
+    private static final String MESSAGE_TITLE = "CliAutoMods - CaposMods";
     private static final String INITIAL_MESSAGE =
             """
             Do you wish do download the latest necessary Definitions for 'caposingenieros.aternos.me:23447'?
-            All files will be downloaded to Appdata/Roaming/.minecraft/targetedMods.
+            All files will be downloaded to Appdata/Roaming/.minecraft/modData.
             No local files will be removed, moved or changed during this process.
             """;
 
@@ -28,7 +31,7 @@ public class AutoModsUI extends AppUI {
     private static final String ERROR_MESSAGE =
             """
             The following Definitions couldn't be downloaded:%s
-            Make sure they are not already on 'targetedMods' folder.
+            Make sure they are not already on 'modData' folder.
             """;
     private final Dimension frameDimension = new Dimension(600, 800);
     private final JPanel modsPanel = new JPanel();
@@ -40,22 +43,22 @@ public class AutoModsUI extends AppUI {
     private final JButton refreshModsBtn = new JButton("Refresh");
     private final JButton downloadModsBtn = new JButton("Download");
     private final JButton dependencyModsBtn = new JButton("Dependencies");
-    private final ModView modView = new ModView();
-    private final AutoMods autoMods;
+    private final ModDataGUI modDataGUI = new ModDataGUI();
+    private AutoMods autoMods;
 
-    private Map<JCheckBox, TargetedMod> clientMods;
-    private Map<JCheckBox, TargetedMod> serverMods;
-    private Map<JCheckBox, TargetedMod> dependencyMods;
+    private Map<JCheckBox, ModData> clientMods;
+    private Map<JCheckBox, ModData> serverMods;
+    private Map<JCheckBox, ModData> dependencyMods;
     private String context;
 
-    public AutoModsUI(AutoMods autoMods) {
+    public AutoModsGUI() {
         this.context = "client";
-        this.autoMods = autoMods;
         this.serverMods = new HashMap<>();
         this.clientMods = new HashMap<>();
         this.dependencyMods = new HashMap<>();
         setLookAndFeel();
         initializeUI();
+        this.setVisible(true);
     }
 
     private void setLookAndFeel(){
@@ -94,18 +97,20 @@ public class AutoModsUI extends AppUI {
         });
 
         refreshModsBtn.addActionListener(x -> {
-            autoMods.updateMods();
+            autoMods.getModController().updateMods();
         });
 
         downloadModsBtn.addActionListener(x -> {
-            List<TargetedMod> selectedTargetedMods = new ArrayList<>();
+            List<ModDownloadTarget> modDownloadTargets = new ArrayList<>();
             if (downloadClient.isSelected())
-                for (Map.Entry<JCheckBox, TargetedMod> mod : clientMods.entrySet())
-                    if (mod.getKey().isSelected()) selectedTargetedMods.add(mod.getValue());
+                for (Map.Entry<JCheckBox, ModData> mod : clientMods.entrySet())
+                    if (mod.getKey().isSelected()) modDownloadTargets.add(
+                                ModDownloadTargetBuilder.create(mod.getValue().getModID(), mod.getValue().getVersion()));
             if (downloadServer.isSelected())
-                for (Map.Entry<JCheckBox, TargetedMod> mod : serverMods.entrySet())
-                    if (mod.getKey().isSelected()) selectedTargetedMods.add(mod.getValue());
-            autoMods.downloadMods(selectedTargetedMods);
+                for (Map.Entry<JCheckBox, ModData> mod : serverMods.entrySet())
+                    if (mod.getKey().isSelected()) modDownloadTargets.add(
+                            ModDownloadTargetBuilder.create(mod.getValue().getModID(), mod.getValue().getVersion()));
+            autoMods.getModController().downloadMods(modDownloadTargets);
         });
 
         JPanel leftup = new JPanel();
@@ -126,7 +131,7 @@ public class AutoModsUI extends AppUI {
         left.add(leftup);
         left.add(leftdown);
 
-        JScrollPane modScroll = new JScrollPane(modView);
+        JScrollPane modScroll = new JScrollPane(modDataGUI);
         modScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         modScroll.setPreferredSize(new Dimension(250, 600));
 
@@ -157,26 +162,27 @@ public class AutoModsUI extends AppUI {
         this.add(container);
     }
 
-    public void updateMods(List<TargetedMod> targetedMods) {
+    @Override
+    public void updateMods(List<ModData> modsData) {
         clientMods.clear();
         serverMods.clear();
-        for (TargetedMod targetedMod : targetedMods) {
-            if (targetedMod.getContexts() != null) {
-                JCheckBox checkBox = new JCheckBox(targetedMod.getName());
+        for (ModData modData : modsData) {
+            if (modData.getContexts() != null) {
+                JCheckBox checkBox = new JCheckBox(modData.getName());
 
                 checkBox.addActionListener(x -> {
                     if (serverMods.containsKey(checkBox))
-                        modView.setMod(serverMods.get(checkBox));
+                        modDataGUI.setMod(serverMods.get(checkBox));
                     else if (clientMods.containsKey(checkBox))
-                        modView.setMod(clientMods.get(checkBox));
+                        modDataGUI.setMod(clientMods.get(checkBox));
                 });
 
-                for (ModContext modContextDefinition : targetedMod.getContexts()) {
-                    if (modContextDefinition.equals(ModContext.client)) clientMods.put(checkBox, targetedMod);
-                    if (modContextDefinition.equals(ModContext.server)) serverMods.put(checkBox, targetedMod);
+                for (ModContext modContextDefinition : modData.getContexts()) {
+                    if (modContextDefinition.equals(ModContext.client)) clientMods.put(checkBox, modData);
+                    if (modContextDefinition.equals(ModContext.server)) serverMods.put(checkBox, modData);
                 }
 
-                if (!targetedMod.getOptional()) {
+                if (!modData.getOptional()) {
                     checkBox.setModel(new ReadOnlyToggleButtonModel(true));
                     checkBox.setFocusable(false);
                     checkBox.setForeground(Color.gray);
@@ -187,7 +193,7 @@ public class AutoModsUI extends AppUI {
     }
 
     private void showContextMods() {
-        Map<JCheckBox, TargetedMod> targetMods = new HashMap<>();
+        Map<JCheckBox, ModData> targetMods = new HashMap<>();
 
         switch (context) {
             case "server" -> targetMods = serverMods;
@@ -196,13 +202,19 @@ public class AutoModsUI extends AppUI {
         }
 
         modsPanel.removeAll();
-        for (Map.Entry<JCheckBox, TargetedMod> targetMod : targetMods.entrySet()) {
+        for (Map.Entry<JCheckBox, ModData> targetMod : targetMods.entrySet()) {
             modsPanel.add(targetMod.getKey());
         }
         modsPanel.updateUI();
     }
 
+    @Override
     public void showCompletedDownload() {
         JOptionPane.showMessageDialog(this, "Download Complete!");
+    }
+
+    @Override
+    public void setAutoMods(AutoMods autoMods) {
+        this.autoMods = autoMods;
     }
 }

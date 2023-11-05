@@ -1,14 +1,14 @@
-package lvum.com.view;
+package lvum.com.view.window;
 
-import lvum.com.model.mod.github.TargetedMod;
+import lvum.com.model.mod.ModData;
 import lvum.com.model.mod.github.definition.ModDependencyDefinition;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ModView extends JPanel {
+public class ModDataGUI extends JPanel {
 
-    private TargetedMod targetedMod;
+    private ModData modData;
     private JLabel modName = new JLabel();
     private JLabel modIdAndVersion = new JLabel();
     private JLabel description = new JLabel();
@@ -16,7 +16,7 @@ public class ModView extends JPanel {
     private JLabel dependencies = new JLabel();
 
 
-    public ModView(){
+    public ModDataGUI(){
         this.setSize(250, 600);
         this.setLayout(new GridLayout(0,1));
         modName.setFont(new Font("Verdana", Font.BOLD, 22));
@@ -38,15 +38,15 @@ public class ModView extends JPanel {
         this.add(dependencies);
     }
 
-    public void setMod(TargetedMod targetedMod) {
-        modName.setText(targetedMod.getName());
-        modIdAndVersion.setText(targetedMod.getModID() + ":" + targetedMod.getTargetVersion().getVersion());
+    public void setMod(ModData modData) {
+        modName.setText(modData.getName());
+        modIdAndVersion.setText(modData.getModID() + ":" + modData.getVersion());
         StringBuilder sb = new StringBuilder();
-        if (targetedMod.getTargetVersion().getDependencies() != null)
-            for (ModDependencyDefinition modDependencyDefinition : targetedMod.getTargetVersion().getDependencies())
+        if (modData.getTargetVersionDefinition().getDependencies() != null)
+            for (ModDependencyDefinition modDependencyDefinition : modData.getTargetVersionDefinition().getDependencies())
                 sb.append(modDependencyDefinition.getModID()).append(":").append(modDependencyDefinition.getVersion())
                         .append("\n");
         dependencies.setText(sb.toString());
-        description.setText(targetedMod.getDescription());
+        description.setText(modData.getDescription());
     }
 }

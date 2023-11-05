@@ -1,25 +1,13 @@
 package lvum.com.model.mod;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ModDownloadResult {
-    private List<String> modsWithErrors = new ArrayList<>();
-    private List<String> modsDownloaded = new ArrayList<>();
+public interface ModDownloadResult {
+    List<String> getModsDownloaded();
 
-    public List<String> getModsDownloaded() {
-        return modsDownloaded;
-    }
+    List<String> getModsWithErrors();
 
-    public List<String> getModsWithErrors() {
-        return modsWithErrors;
-    }
+    void addError(String modid);
 
-    public void addError(String modid) {
-        modsWithErrors.add(modid);
-    }
-
-    public void addDownload(String modid) {
-        modsDownloaded.add(modid);
-    }
+    void addDownload(String modid);
 }
