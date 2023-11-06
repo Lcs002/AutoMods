@@ -1,16 +1,16 @@
 package lvum.com.app;
 
-import lvum.com.controller.mod.ModControllerImpl;
-import lvum.com.model.mod.github.GithubModRepository;
-import lvum.com.view.cli.AutoModsCliView;
-import lvum.com.view.window.AutoModsGUI;
+import lvum.com.app.controller.mod.ModControllerImpl;
+import lvum.com.app.model.mod_definition.github.GithubModDefinitionRepository;
+import lvum.com.app.view.cli.AutoModsCliView;
+import lvum.com.app.view.gui.AutoModsGUI;
 
 public class AutoModsFactory {
     public static AutoMods createWindowAutoMods(){
         return new AutoMods(
                 new AutoModsGUI(),
                 new ModControllerImpl(),
-                new GithubModRepository()
+                new GithubModDefinitionRepository()
         );
     }
 
@@ -18,7 +18,7 @@ public class AutoModsFactory {
         return new AutoMods(
                 new AutoModsCliView(),
                 new ModControllerImpl(),
-                new GithubModRepository()
+                new GithubModDefinitionRepository()
         );
     }
 }

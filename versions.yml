@@ -1,5 +1,5 @@
 versions:
 - version: 1.0
-  file: CliAutoMods-1.0.jar
+  file: Main-1.0.jar
 - version: 1.1
-  file: CliAutoMods-1.1.jar
+  file: Main-1.1.jar
