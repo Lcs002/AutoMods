@@ -6,7 +6,9 @@ import lvum.com.app.model.mod_definition.github.yml.YMLModDefinitionVersion;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -52,8 +54,12 @@ public class FileDownloaderImpl implements FileDownloader {
             Files.copy(inputStream, Paths.get(destination, file));
             // Close the input stream.
             inputStream.close();
-        } catch (Exception e) {
-            LOGGER.info("[ERROR]: " + e.getMessage());
+        } catch (MalformedURLException e) {
+            LOGGER.info("[ERROR]: " + e);
+            result.addError(file);
+            return result;
+        } catch (IOException e) {
+            LOGGER.info("[ERROR]: " + e);
             result.addError(file);
             return result;
         }

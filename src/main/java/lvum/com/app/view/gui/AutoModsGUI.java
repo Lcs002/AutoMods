@@ -1,7 +1,6 @@
 package lvum.com.app.view.gui;
 
 import lvum.com.app.controller.mod.ModController;
-import lvum.com.app.model.mod_definition.ModDefinition;
 import lvum.com.app.model.mod_definition.ModDefinitionContext;
 import lvum.com.app.view.AutoModsViewComponent;
 import lvum.com.app.view.ModInfo;
@@ -9,6 +8,7 @@ import lvum.com.utils.FolderFinder;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,23 +33,26 @@ public class AutoModsGUI extends JFrame implements AutoModsViewComponent {
             The following YMLDefinitions couldn't be downloaded:%s
             Make sure they are not already on 'ModDefinition' folder.
             """;
-    private final Dimension frameDimension = new Dimension(600, 800);
-    private final JPanel modsPanel = new JPanel();
-    private final JScrollPane modsScrollPane = new JScrollPane(modsPanel);
-    private final JCheckBox downloadClient = new JCheckBox("Download Client Mods");
-    private final JCheckBox downloadServer = new JCheckBox("Download Server Mods");
-    private final JToggleButton clientModsBtn = new JToggleButton("Client");
-    private final JToggleButton serverModsBtn = new JToggleButton("Server");
-    private final JButton refreshModsBtn = new JButton("Refresh");
-    private final JButton downloadModsBtn = new JButton("Download");
-    private final JButton dependencyModsBtn = new JButton("Dependencies");
-    private final ModInfoGUI modInfoGUI = new ModInfoGUI();
+    private final Dimension frameDimension;
+    private final JPanel modsPanel;
+    private final JScrollPane modsScrollPane;
+    private final JCheckBox downloadClient;
+    private final JCheckBox downloadServer;
+    private final JToggleButton clientModsBtn;
+    private final JToggleButton serverModsBtn;
+    private final JButton refreshModsBtn;
+    private final JButton downloadModsBtn;
+    private final JButton dependencyModsBtn;
+    private final JButton destinationBtn;
+    private final JFileChooser destinationFileChooser;
+    private final ModInfoGUI modInfoGUI;
     private ModController modController;
 
     private Map<JCheckBox, ModInfo> clientMods;
     private Map<JCheckBox, ModInfo> serverMods;
     private Map<JCheckBox, ModInfo> dependencyMods;
     private String context;
+    private String downloadDestination;
 
     public AutoModsGUI() {
         this.context = "client";
@@ -57,6 +60,19 @@ public class AutoModsGUI extends JFrame implements AutoModsViewComponent {
         this.clientMods = new HashMap<>();
         this.dependencyMods = new HashMap<>();
         setLookAndFeel();
+        this.frameDimension = new Dimension(600, 800);
+        modsPanel = new JPanel();
+        modsScrollPane = new JScrollPane(modsPanel);
+        downloadClient = new JCheckBox("Download Client Mods");
+        downloadServer = new JCheckBox("Download Server Mods");
+        clientModsBtn = new JToggleButton("Client");
+        serverModsBtn = new JToggleButton("Server");
+        refreshModsBtn = new JButton("Refresh");
+        downloadModsBtn = new JButton("Download");
+        dependencyModsBtn = new JButton("Dependencies");
+        destinationBtn = new JButton("Destination");
+        destinationFileChooser = new JFileChooser();
+        modInfoGUI = new ModInfoGUI();
         initializeUI();
         this.setVisible(true);
     }
@@ -64,6 +80,8 @@ public class AutoModsGUI extends JFrame implements AutoModsViewComponent {
     private void setLookAndFeel(){
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            SwingUtilities.updateComponentTreeUI(this);
+            this.pack();
         } catch (Exception e) {
             System.out.println("Unable to set LookAndFeel");
         }
@@ -78,6 +96,7 @@ public class AutoModsGUI extends JFrame implements AutoModsViewComponent {
         this.modsPanel.setLayout(new BoxLayout(modsPanel, BoxLayout.Y_AXIS));
         this.modsScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         this.modsScrollPane.setPreferredSize(new Dimension(250, 600));
+        this.destinationFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         clientModsBtn.addActionListener(x -> {
             context = "client";
@@ -94,6 +113,14 @@ public class AutoModsGUI extends JFrame implements AutoModsViewComponent {
         dependencyModsBtn.addActionListener(x -> {
             context = "dependency";
             showContextMods();
+        });
+
+        destinationBtn.addActionListener(x -> {
+            int val = destinationFileChooser.showDialog(this, "Select");
+            if (val == JFileChooser.APPROVE_OPTION) {
+                File folder = destinationFileChooser.getSelectedFile();
+                downloadDestination = folder.getAbsolutePath();
+            }
         });
 
         refreshModsBtn.addActionListener(x -> {
@@ -120,7 +147,8 @@ public class AutoModsGUI extends JFrame implements AutoModsViewComponent {
                         modDownloadTargets.add(mod.getValue().getModID());
                 }
             }
-            modController.setDownloadDestination(FolderFinder.getAppDataMincraftModsFolder());
+            if (downloadDestination == null) downloadDestination = FolderFinder.getAppDataMincraftModsFolder();
+            modController.setDownloadDestination(downloadDestination);
             modController.download(contexts, modDownloadTargets, false);
         });
 
@@ -159,6 +187,7 @@ public class AutoModsGUI extends JFrame implements AutoModsViewComponent {
         JPanel down = new JPanel();
         down.setLayout(new GridLayout(2, 2));
         down.setSize(400, 200);
+        down.add(destinationBtn);
         down.add(refreshModsBtn);
         down.add(downloadModsBtn);
         down.add(downloadClient);
