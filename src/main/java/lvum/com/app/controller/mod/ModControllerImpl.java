@@ -112,9 +112,7 @@ public class ModControllerImpl implements ModControllerComponent {
 
     private ModDefinitionVersion getTargetModDefinitionVersion(String modID) {
         ModReference modReference = modReferenceRepository.getOne(modID);
-        if (modReference == null) throw new IllegalArgumentException();
         ModDefinition modDefinition = modDefinitionRepository.getOne(modID);
-        if (modDefinition == null) throw new IllegalArgumentException();
 
         List<ModDefinitionVersion> modDefinitionVersions = Arrays.stream(modDefinition.getVersions()).toList();
         String version = modReference.getVersion();

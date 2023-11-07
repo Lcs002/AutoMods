@@ -47,12 +47,8 @@ k
 ;src/main/java/lvum/com/utils/downloader/FileDownloader.java,8\0\80ae13a63862e89927ebaa276afdd29ed4ca49d4
 l
 <src/main/java/lvum/com/app/controller/mod/ModController.java,d\d\ddd51363d9970d3fdf2fe936f606113108ffcb3e
-p
-@src/main/java/lvum/com/app/controller/mod/ModControllerImpl.java,9\4\94acb807041ca6f0db494abe9dbb6fc0ccbeba77
 z
 Jsrc/main/java/lvum/com/app/model/mod_reference/ModReferenceRepository.java,f\1\f1b7d161c784353d39e7613e01b78d9656a23308
-‡
-Wsrc/main/java/lvum/com/app/model/mod_reference/github/GithubModReferenceRepository.java,0\d\0dc374bce5a4438441fa4069e54479c90abb0d99
 p
 @src/main/java/lvum/com/app/model/mod_reference/ModReference.java,1\5\151a20141b529db5dd165969f7ca3a36bba67eb5
 €
@@ -65,8 +61,6 @@ Wsrc/main/java/lvum/com/app/model/mod_definition/github/yml/YMLModDefinitionVers
 Tsrc/main/java/lvum/com/app/model/mod_definition/github/yml/YMLModDefinitionImpl.java,a\a\aa2fdebb92f1f2f164d565576af07e258fc6b1d6
 ‹
 [src/main/java/lvum/com/app/model/mod_definition/github/yml/YMLModDefinitionVersionImpl.java,8\6\865fb6cd5b2dd776b6e7e81e57c0aee2a95663d6
-‰
-Ysrc/main/java/lvum/com/app/model/mod_definition/github/GithubModDefinitionRepository.java,1\6\16f1afda150fb9abc05fa3f6f65b92c47e708438
 ^
 .src/main/java/lvum/com/utils/FolderFinder.java,0\2\02a108cf9914cbe002dfff9d271078c0450e6112
 r
@@ -79,8 +73,6 @@ Lsrc/main/java/lvum/com/app/model/mod_reference/github/yml/YMLReferences.java,c
 Rsrc/main/java/lvum/com/app/model/mod_reference/github/yml/YMLModReferenceImpl.java,b\7\b75bf2f6a145aed1705a615d9eb3200a7e74cb7a
 j
 :src/main/java/lvum/com/app/view/AutoModsViewComponent.java,e\e\ee8e5c8044771a6b3c1af7b8327899bd7a44e179
-|
-Lsrc/main/java/lvum/com/app/model/mod_definition/ModDefinitionRepository.java,e\1\e13a5a12f94d3e68c3cfd2e156e58f7ee5242311
 \
 ,src/main/java/lvum/com/app/view/ModInfo.java,5\a\5a0427c2aedea2fbb14d20bcfd643945a633cec1
 u

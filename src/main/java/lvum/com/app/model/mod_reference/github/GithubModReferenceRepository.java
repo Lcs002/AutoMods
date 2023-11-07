@@ -50,6 +50,8 @@ public class GithubModReferenceRepository implements ModReferenceRepository {
     public ModReference getOne(String modID) {
         Optional<ModReference> modReference = references.stream()
                 .filter(x -> x.getModID().equals(modID)).findFirst();
+        if (modReference.isEmpty())
+            throw new IllegalArgumentException("[ERROR]: " + modID + " not found at " + this.getClass().getName());
         return modReference.orElse(null);
     }
 

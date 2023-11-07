@@ -46,6 +46,8 @@ public class GithubModDefinitionRepository implements ModDefinitionRepository {
     public ModDefinition getOne(String modID) {
         Optional<ModDefinition> modDefinition = definitions.stream()
                 .filter(x -> x.getModID().equals(modID)).findFirst();
+        if (modDefinition.isEmpty())
+            throw new IllegalArgumentException("[ERROR]: " + modID + " not found at " + this.getClass().getName());
         return modDefinition.orElse(null);
     }
 
