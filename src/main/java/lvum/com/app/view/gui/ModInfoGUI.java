@@ -1,14 +1,15 @@
 package lvum.com.app.view.gui;
 
 import lvum.com.app.model.mod_definition.ModDefinition;
+import lvum.com.app.model.mod_definition.ModDefinitionDependency;
+import lvum.com.app.model.mod_definition.ModDefinitionVersion;
 import lvum.com.app.model.mod_definition.github.yml.YMLModDefinitionDependency;
+import lvum.com.app.view.ModInfo;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ModDataGUI extends JPanel {
-
-    private ModDefinition ModDefinition;
+public class ModInfoGUI extends JPanel {
     private JLabel modName = new JLabel();
     private JLabel modIdAndVersion = new JLabel();
     private JLabel description = new JLabel();
@@ -16,7 +17,7 @@ public class ModDataGUI extends JPanel {
     private JLabel dependencies = new JLabel();
 
 
-    public ModDataGUI(){
+    public ModInfoGUI(){
         this.setSize(250, 600);
         this.setLayout(new GridLayout(0,1));
         modName.setFont(new Font("Verdana", Font.BOLD, 22));
@@ -38,15 +39,15 @@ public class ModDataGUI extends JPanel {
         this.add(dependencies);
     }
 
-    public void setMod(ModDefinition ModDefinition) {
-        modName.setText(ModDefinition.getName());
-        modIdAndVersion.setText(ModDefinition.getModID() + ":" + ModDefinition.getVersion());
+    public void setMod(ModInfo modInfo) {
+        modName.setText(modInfo.getName());
+        modIdAndVersion.setText(modInfo.getModID() + ":" + modInfo.getVersion());
         StringBuilder sb = new StringBuilder();
-        if (ModDefinition.getTargetVersionDefinition().getDependencies() != null)
-            for (YMLModDefinitionDependency YMLModDefinitionDependency : ModDefinition.getTargetVersionDefinition().getDependencies())
-                sb.append(YMLModDefinitionDependency.getModID()).append(":").append(YMLModDefinitionDependency.getVersion())
+        if (modInfo.getTargetVersion().getDependencies() != null)
+            for (ModDefinitionDependency modDefinitionDependency : modInfo.getTargetVersion().getDependencies())
+                sb.append(modDefinitionDependency.getModID()).append(":").append(modDefinitionDependency.getVersion())
                         .append("\n");
         dependencies.setText(sb.toString());
-        description.setText(ModDefinition.getDescription());
+        description.setText(modInfo.getDescription());
     }
 }

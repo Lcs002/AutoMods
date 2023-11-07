@@ -4,6 +4,8 @@ import lvum.com.app.model.mod_definition.ModDefinition;
 import lvum.com.app.model.mod_definition.ModDefinitionRepository;
 import lvum.com.app.model.mod_definition.github.yml.YMLModDefinitionVersion;
 
+import javax.swing.filechooser.FileFilter;
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -13,23 +15,33 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FileDownloaderImpl extends FileDownloader {
+public class FileDownloaderImpl implements FileDownloader {
     private static final Logger LOGGER = Logger.getLogger(FileDownloaderImpl.class.getName());
     private String DB_URL = "https://github.com/Lcs002/AutoModsDB/raw/main/database";
 
-    public FileDownloaderImpl(ModDefinitionRepository repository) {
-        super(repository);
+
+    @Override
+    public FileDownloadResult download(String file, String destination, boolean cleanup) {
+        if (cleanup) cleanup(destination);
+        return download(file, destination);
     }
 
     @Override
-    public FileDownloadResult download(String modID, String version, String destination, boolean cleanup) {
+    public FileDownloadResult download(List<String> files, String destination, boolean cleanup) {
+        if (cleanup) cleanup(destination);
+
         FileDownloadResult result = new FileDownloadResultImpl();
-        ModDefinition ModDefinition = repository.getModData(modID);
+        for (String file : files) {
+            FileDownloadResult r = download(file, destination);
+            result.getModsDownloaded().addAll(r.getModsDownloaded());
+            result.getModsWithErrors().addAll(r.getModsWithErrors());
+        }
+        return result;
+    }
+
+    private FileDownloadResult download(String file, String destination) {
+        FileDownloadResult result = new FileDownloadResultImpl();
         try {
-            // Version to download
-            YMLModDefinitionVersion versionDefinition = ModDefinition.getTargetVersionDefinition();
-            // File to download
-            String file = versionDefinition.getFile();
             // Get url to file
             URL murl = new URL(DB_URL + "/" + file);
             // Open a connection to the URL.
@@ -41,22 +53,29 @@ public class FileDownloaderImpl extends FileDownloader {
             // Close the input stream.
             inputStream.close();
         } catch (Exception e) {
-            LOGGER.log(Level.INFO, e.getMessage());
-            result.addError(modID);
+            LOGGER.info("[ERROR]: " + e.getMessage());
+            result.addError(file);
             return result;
         }
-        result.addDownload(modID);
+        LOGGER.info("[DOWNLOADED]: " + file);
+        result.addDownload(file);
         return result;
     }
 
-    @Override
-    public FileDownloadResult download(List<String> modsID, String destination, boolean cleanup) {
-        FileDownloadResult result = new FileDownloadResultImpl();
-        for (String modID : modsID) {
-            FileDownloadResult r = download(modID, destination, cleanup);
-            result.getModsDownloaded().addAll(r.getModsDownloaded());
-            result.getModsWithErrors().addAll(r.getModsWithErrors());
+    private void cleanup(String destination) {
+        File folder = new File(destination);
+        File[] files = folder.listFiles(new JARFilter());
+        for (int i = 0; i < files.length; i++) {
+            String fileName = files[i].getName();
+            if (files[i].delete()) LOGGER.log(Level.INFO, "[DELETION]: " + fileName);
+            else LOGGER.log(Level.INFO, "[ERROR]: Could not delete file '" + fileName + "'");
         }
-        return result;
+    }
+
+    private class JARFilter implements java.io.FileFilter {
+        @Override
+        public boolean accept(File f) {
+            return f.getName().endsWith(".jar");
+        }
     }
 }

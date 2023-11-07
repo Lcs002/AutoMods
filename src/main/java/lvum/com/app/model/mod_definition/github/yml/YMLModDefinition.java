@@ -1,11 +1,12 @@
 package lvum.com.app.model.mod_definition.github.yml;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lvum.com.app.model.mod_definition.ModDefinition;
 import lvum.com.app.model.mod_definition.ModDefinitionContext;
+import lvum.com.app.model.mod_definition.ModDefinitionVersion;
 
 @JsonDeserialize(as = YMLModDefinitionImpl.class)
-public interface YMLModDefinition {
-
+public interface YMLModDefinition extends ModDefinition {
     String getModID();
     void setModID(String value);
 

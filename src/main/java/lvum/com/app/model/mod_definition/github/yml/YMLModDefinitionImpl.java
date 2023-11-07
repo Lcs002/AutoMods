@@ -1,6 +1,7 @@
 package lvum.com.app.model.mod_definition.github.yml;
 
 import lvum.com.app.model.mod_definition.ModDefinitionContext;
+import lvum.com.app.model.mod_definition.ModDefinitionVersion;
 
 public class YMLModDefinitionImpl implements YMLModDefinition {
     private String modID;
@@ -8,7 +9,7 @@ public class YMLModDefinitionImpl implements YMLModDefinition {
     private String description;
     private Boolean optional;
     private ModDefinitionContext[] modDefinitionContexts;
-    private YMLModDefinitionVersion[] YMLModDefinitionVersions;
+    private YMLModDefinitionVersion[] ymlModDefinitionVersions;
 
     @Override
     public String getModID() { return modID; }
@@ -24,7 +25,6 @@ public class YMLModDefinitionImpl implements YMLModDefinition {
     public String getDescription() {
         return description;
     }
-
     @Override
     public void setDescription(String value) {
         description = value;
@@ -41,7 +41,12 @@ public class YMLModDefinitionImpl implements YMLModDefinition {
     public void setContexts(ModDefinitionContext[] value) { this.modDefinitionContexts = value; }
 
     @Override
-    public YMLModDefinitionVersion[] getVersions() { return YMLModDefinitionVersions; }
+    public YMLModDefinitionVersion[] getVersions() { return ymlModDefinitionVersions; }
     @Override
-    public void setVersions(YMLModDefinitionVersion[] value) { this.YMLModDefinitionVersions = value; }
+    @com.fasterxml.jackson.annotation.JsonSetter
+    public void setVersions(YMLModDefinitionVersion[] value) { this.ymlModDefinitionVersions = value; }
+    @Override
+    public void setVersions(ModDefinitionVersion[] value) {
+        this.ymlModDefinitionVersions = (YMLModDefinitionVersion[]) value;
+    }
 }

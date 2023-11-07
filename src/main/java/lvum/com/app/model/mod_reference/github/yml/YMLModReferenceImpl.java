@@ -1,8 +1,6 @@
-package lvum.com.app.model.mod_definition.github.reference.yml;
+package lvum.com.app.model.mod_reference.github.yml;
 
-import lvum.com.app.model.mod_definition.github.reference.ModReference;
-
-public class YMLModReference implements ModReference {
+public class YMLModReferenceImpl implements YMLModReference {
     private String modID;
     private String version;
 

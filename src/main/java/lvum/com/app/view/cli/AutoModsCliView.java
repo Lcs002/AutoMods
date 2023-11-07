@@ -1,15 +1,18 @@
 package lvum.com.app.view.cli;
 
 import lvum.com.app.AutoMods;
+import lvum.com.app.controller.mod.ModController;
 import lvum.com.app.model.mod_definition.ModDefinition;
 import lvum.com.app.view.AutoModsView;
+import lvum.com.app.view.AutoModsViewComponent;
+import lvum.com.app.view.ModInfo;
 
 import java.util.List;
 
-public class AutoModsCliView implements AutoModsView {
+public class AutoModsCliView implements AutoModsViewComponent {
 
     @Override
-    public void updateMods(List<ModDefinition> modData) {
+    public void updateMods(List<ModInfo> modInfo) {
 
     }
 
@@ -19,7 +22,7 @@ public class AutoModsCliView implements AutoModsView {
     }
 
     @Override
-    public void setAutoMods(AutoMods autoMods) {
+    public void setModController(ModController modController) {
 
     }
 }

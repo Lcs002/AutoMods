@@ -1,11 +1,11 @@
 package lvum.com.app.view.gui;
 
-import lvum.com.app.AutoMods;
+import lvum.com.app.controller.mod.ModController;
 import lvum.com.app.model.mod_definition.ModDefinition;
-import lvum.com.app.controller.mod.ModDownloadTarget;
-import lvum.com.app.controller.mod.ModDownloadTargetBuilder;
 import lvum.com.app.model.mod_definition.ModDefinitionContext;
-import lvum.com.app.view.AutoModsView;
+import lvum.com.app.view.AutoModsViewComponent;
+import lvum.com.app.view.ModInfo;
+import lvum.com.utils.FolderFinder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AutoModsGUI extends JFrame implements AutoModsView {
+public class AutoModsGUI extends JFrame implements AutoModsViewComponent {
     private static final String MESSAGE_TITLE = "Main - CaposMods";
     private static final String INITIAL_MESSAGE =
             """
@@ -43,12 +43,12 @@ public class AutoModsGUI extends JFrame implements AutoModsView {
     private final JButton refreshModsBtn = new JButton("Refresh");
     private final JButton downloadModsBtn = new JButton("Download");
     private final JButton dependencyModsBtn = new JButton("Dependencies");
-    private final ModDataGUI modDataGUI = new ModDataGUI();
-    private AutoMods autoMods;
+    private final ModInfoGUI modInfoGUI = new ModInfoGUI();
+    private ModController modController;
 
-    private Map<JCheckBox, ModDefinition> clientMods;
-    private Map<JCheckBox, ModDefinition> serverMods;
-    private Map<JCheckBox, ModDefinition> dependencyMods;
+    private Map<JCheckBox, ModInfo> clientMods;
+    private Map<JCheckBox, ModInfo> serverMods;
+    private Map<JCheckBox, ModInfo> dependencyMods;
     private String context;
 
     public AutoModsGUI() {
@@ -97,21 +97,31 @@ public class AutoModsGUI extends JFrame implements AutoModsView {
         });
 
         refreshModsBtn.addActionListener(x -> {
-            autoMods.getModController().updateMods();
+            modController.updateMods();
         });
 
         downloadModsBtn.addActionListener(x -> {
-            List<ModDownloadTarget> modDownloadTargets = new ArrayList<>();
+            List<String> modDownloadTargets = new ArrayList<>();
             List<ModDefinitionContext> contexts = new ArrayList<>();
-            if (downloadClient.isSelected())
-                for (Map.Entry<JCheckBox, ModDefinition> mod : clientMods.entrySet())
-                    if (mod.getKey().isSelected()) modDownloadTargets.add(
-                                ModDownloadTargetBuilder.create(mod.getValue().getModID(), mod.getValue().getVersion()));
-            if (downloadServer.isSelected())
-                for (Map.Entry<JCheckBox, ModDefinition> mod : serverMods.entrySet())
-                    if (mod.getKey().isSelected()) modDownloadTargets.add(
-                            ModDownloadTargetBuilder.create(mod.getValue().getModID(), mod.getValue().getVersion()));
-            autoMods.getModController().downloadMods(contexts, modDownloadTargets, false);
+            if (downloadClient.isSelected()) {
+                contexts.add(ModDefinitionContext.client);
+                for (Map.Entry<JCheckBox, ModInfo> mod : clientMods.entrySet()) {
+                    ModInfo modInfo = mod.getValue();
+                    if (mod.getKey().isSelected() && modInfo.getOptional())
+                        modDownloadTargets.add(mod.getValue().getModID());
+                }
+            }
+
+            if (downloadServer.isSelected()) {
+                contexts.add(ModDefinitionContext.server);
+                for (Map.Entry<JCheckBox, ModInfo> mod : serverMods.entrySet()) {
+                    ModInfo modInfo = mod.getValue();
+                    if (mod.getKey().isSelected() && modInfo.getOptional())
+                        modDownloadTargets.add(mod.getValue().getModID());
+                }
+            }
+            modController.setDownloadDestination(FolderFinder.getAppDataMincraftModsFolder());
+            modController.download(contexts, modDownloadTargets, false);
         });
 
         JPanel leftup = new JPanel();
@@ -132,7 +142,7 @@ public class AutoModsGUI extends JFrame implements AutoModsView {
         left.add(leftup);
         left.add(leftdown);
 
-        JScrollPane modScroll = new JScrollPane(modDataGUI);
+        JScrollPane modScroll = new JScrollPane(modInfoGUI);
         modScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         modScroll.setPreferredSize(new Dimension(250, 600));
 
@@ -164,26 +174,27 @@ public class AutoModsGUI extends JFrame implements AutoModsView {
     }
 
     @Override
-    public void updateMods(List<ModDefinition> modsData) {
+    public void updateMods(List<ModInfo> modsInfo) {
+        System.out.println(modsInfo);
         clientMods.clear();
         serverMods.clear();
-        for (ModDefinition ModDefinition : modsData) {
-            if (ModDefinition.getContexts() != null) {
-                JCheckBox checkBox = new JCheckBox(ModDefinition.getName());
+        for (ModInfo modInfo : modsInfo) {
+            if (modInfo.getContexts() != null) {
+                JCheckBox checkBox = new JCheckBox(modInfo.getName());
 
                 checkBox.addActionListener(x -> {
                     if (serverMods.containsKey(checkBox))
-                        modDataGUI.setMod(serverMods.get(checkBox));
+                        modInfoGUI.setMod(serverMods.get(checkBox));
                     else if (clientMods.containsKey(checkBox))
-                        modDataGUI.setMod(clientMods.get(checkBox));
+                        modInfoGUI.setMod(clientMods.get(checkBox));
                 });
 
-                for (ModDefinitionContext modDefinitionContextDefinition : ModDefinition.getContexts()) {
-                    if (modDefinitionContextDefinition.equals(ModDefinitionContext.client)) clientMods.put(checkBox, ModDefinition);
-                    if (modDefinitionContextDefinition.equals(ModDefinitionContext.server)) serverMods.put(checkBox, ModDefinition);
+                for (ModDefinitionContext modDefinitionContextDefinition : modInfo.getContexts()) {
+                    if (modDefinitionContextDefinition.equals(ModDefinitionContext.client)) clientMods.put(checkBox, modInfo);
+                    if (modDefinitionContextDefinition.equals(ModDefinitionContext.server)) serverMods.put(checkBox, modInfo);
                 }
 
-                if (!ModDefinition.getOptional()) {
+                if (!modInfo.getOptional()) {
                     checkBox.setModel(new ReadOnlyToggleButtonModel(true));
                     checkBox.setFocusable(false);
                     checkBox.setForeground(Color.gray);
@@ -194,7 +205,7 @@ public class AutoModsGUI extends JFrame implements AutoModsView {
     }
 
     private void showContextMods() {
-        Map<JCheckBox, ModDefinition> targetMods = new HashMap<>();
+        Map<JCheckBox, ModInfo> targetMods = new HashMap<>();
 
         switch (context) {
             case "server" -> targetMods = serverMods;
@@ -203,7 +214,7 @@ public class AutoModsGUI extends JFrame implements AutoModsView {
         }
 
         modsPanel.removeAll();
-        for (Map.Entry<JCheckBox, ModDefinition> targetMod : targetMods.entrySet()) {
+        for (Map.Entry<JCheckBox, ModInfo> targetMod : targetMods.entrySet()) {
             modsPanel.add(targetMod.getKey());
         }
         modsPanel.updateUI();
@@ -215,7 +226,7 @@ public class AutoModsGUI extends JFrame implements AutoModsView {
     }
 
     @Override
-    public void setAutoMods(AutoMods autoMods) {
-        this.autoMods = autoMods;
+    public void setModController(ModController modController) {
+        this.modController = modController;
     }
 }

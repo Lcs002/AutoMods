@@ -1,7 +1,5 @@
 package lvum.com.app.model.mod_definition;
 
-import lvum.com.app.model.mod_definition.github.yml.YMLModDefinitionVersion;
-
 public interface ModDefinition {
     String getModID();
     void setModID(String value);
@@ -18,6 +16,6 @@ public interface ModDefinition {
     ModDefinitionContext[] getContexts();
     void setContexts(ModDefinitionContext[] value);
 
-    YMLModDefinitionVersion[] getVersionDefinitions();
-    void setVersions(YMLModDefinitionVersion[] value);
+    ModDefinitionVersion[] getVersions();
+    void setVersions(ModDefinitionVersion[] value);
 }

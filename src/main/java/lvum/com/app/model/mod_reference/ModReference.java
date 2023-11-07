@@ -1,6 +1,6 @@
-package lvum.com.app.model.mod_definition;
+package lvum.com.app.model.mod_reference;
 
-public interface ModDefinitionDependency {
+public interface ModReference {
     String getModID();
     void setModID(String value);
 

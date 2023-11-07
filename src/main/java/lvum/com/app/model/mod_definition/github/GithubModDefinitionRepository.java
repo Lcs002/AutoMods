@@ -18,41 +18,51 @@ import java.util.logging.Logger;
 public class GithubModDefinitionRepository implements ModDefinitionRepository {
     private static final Logger LOGGER = Logger.getLogger(GithubModDefinitionRepository.class.getName());
     private static final String YML_DEFINITIONS = "https://raw.githubusercontent.com/Lcs002/AutoModsDB/main/definitions.yml";
-    // private static final String YML_REFERENCES = "https://raw.githubusercontent.com/Lcs002/AutoModsDB/main/references.yml";
     private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    private ArrayList<YMLModDefinition> definitions = new ArrayList<>();
+    private ArrayList<ModDefinition> definitions = new ArrayList<>();
 
     @Override
     public void updateRepository() {
-        LOGGER.log(Level.INFO, "[STARTED] Update YMLDefinitions YMLDefinitions");
-        YMLDefinitions YMLDefinitions;
+        YMLDefinitions ymlDefinitions;
 
         try {
             // Try to parse the YML and save it to a class
             YAMLParser parser = new YAMLParser();
-            YMLDefinitions = parser.parse(YML_DEFINITIONS, YMLDefinitions.class, mapper);
+            ymlDefinitions = parser.parse(YML_DEFINITIONS, YMLDefinitions.class, mapper);
         } catch (MalformedURLException e) {
+            LOGGER.log(Level.INFO, "[ERROR]: " + e.getMessage());
             throw new RuntimeException(e);
         } catch (IOException e) {
+            LOGGER.log(Level.INFO, "[ERROR]: " + e.getMessage());
             throw new RuntimeException(e);
         }
-        LOGGER.log(Level.INFO, "[ENDED] Update YMLDefinitions YMLDefinitions");
+        LOGGER.log(Level.INFO, "[DATABASE] Updated");
+
         // Save the parsed YML to a List of Defined YMLDefinitions
-        this.definitions = new ArrayList<>(List.of(YMLDefinitions.getMods()));
+        this.definitions = new ArrayList<>(List.of(ymlDefinitions.getMods()));
     }
 
     @Override
-    public ModDefinition getModData(String modID) {
-        return null;
+    public ModDefinition getOne(String modID) {
+        Optional<ModDefinition> modDefinition = definitions.stream()
+                .filter(x -> x.getModID().equals(modID)).findFirst();
+        return modDefinition.orElse(null);
     }
 
     @Override
-    public List<ModDefinition> getModsData(List<String> modsID) {
-        return null;
+    public List<ModDefinition> getMultiple(List<String> modsID) {
+        List<ModDefinition> modsDefinition = new ArrayList<>();
+        for (String modID : modsID) {
+            ModDefinition modDefinition = getOne(modID);
+            if (modDefinition == null) throw new IllegalArgumentException();
+            modsDefinition.add(modDefinition);
+        }
+        return modsDefinition;
     }
 
     @Override
-    public FileDownloader getDownloader() {
-        return null;
+    public List<ModDefinition> getAll() {
+        return (List<ModDefinition>) definitions.clone();
     }
+
 }
